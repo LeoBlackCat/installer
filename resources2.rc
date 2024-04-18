@@ -1,0 +1,6 @@
+#define RT_MANIFEST 24
+1 RT_MANIFEST "app-name.exe.manifest"
+
+MAINICON ICON "sync.ico"
+
+UPDATE IMAGE "windows.png"
