@@ -4,3 +4,4 @@
 MAINICON ICON "sync.ico"
 
 UPDATE IMAGE "windows.png"
+CLOSE IMAGE "close_icon.png"

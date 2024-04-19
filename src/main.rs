@@ -4,12 +4,8 @@ extern crate winapi;
 
 
 use nwd::NwgUi;
-use nwg::NativeUi;
-use std::ffi::OsStr;
-use std::iter::once;
-use std::ptr::null_mut;
+use crate::nwg::NativeUi;
 use std::path::PathBuf;
-use reqwest::blocking::get;
 use std::fs::File;
 use std::io::Write;
 use directories::UserDirs;
@@ -19,7 +15,7 @@ use std::process::Command;
 #[derive(Default, NwgUi)]
 pub struct EmbedApp {
     #[nwg_control(size: (800, 600), center: true, flags: "POPUP|VISIBLE", title: "Installer")]
-    #[nwg_events( OnWindowClose: [EmbedApp::say_goodbye], OnInit: [EmbedApp::init]  )]
+    #[nwg_events( OnWindowClose: [EmbedApp::close], OnInit: [EmbedApp::init]  )]
     window: nwg::Window,
 
     #[nwg_resource]
@@ -28,12 +24,22 @@ pub struct EmbedApp {
     #[nwg_resource(source_embed: Some(&data.embed), source_embed_str: Some("UPDATE"))]
     update: nwg::Bitmap,
 
+    #[nwg_resource(source_embed: Some(&data.embed), source_embed_str: Some("CLOSE"))]
+    close: nwg::Bitmap,
+
     #[nwg_control(position: (272, 130), size: (256, 240), bitmap: Some(&data.update))]
     embed_bitmap: nwg::ImageFrame,
 
-    #[nwg_control(position: (280, 450), size: (240, 40), text: "Install", background_color: [150, 0, 0])]
+    #[nwg_control(position: (280, 450), size: (240, 40), text: "Install", flags: "VISIBLE|OWNERDRAW")]
     #[nwg_events( OnButtonClick: [EmbedApp::download_and_install] )]
     install_button: nwg::Button,
+
+    #[nwg_control(position: (768, 0), size: (24, 24), text: "1", flags: "VISIBLE|BITMAP|OWNERDRAW", bitmap: Some(&data.close))]
+    #[nwg_events( OnButtonClick: [EmbedApp::close] )]
+    close_button: nwg::Button,
+
+    #[nwg_control(position: (0, 0), size: (200, 24), text: "Hello", flags: "VISIBLE|PUSHLIKE")]
+    fuck_button: nwg::Button,
 }
 
 impl EmbedApp {
@@ -76,7 +82,7 @@ impl EmbedApp {
         }
     }
 
-    fn say_goodbye(&self) {
+    fn close(&self) {
         nwg::stop_thread_dispatch();
     }
 }
